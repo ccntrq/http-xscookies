@@ -76,8 +76,11 @@ sub test_bake_time {
         my $string1 = cookie_to_string($cookie);
         my $string2 = cookie_to_string($expected);
 
-        my $epoch1 = cookie_epoch($string1);
-        my $epoch2 = cookie_epoch($string2);
+        # if both epochs are undefined the should match
+        # if only one is undefined the delta will be larger than 1 and the
+        # test will fail
+        my $epoch1 = cookie_epoch($string1) // -1;
+        my $epoch2 = cookie_epoch($string2) // -1;
         my $delta = abs($epoch1 - $epoch2);
         cmp_ok($delta, '<=', 1,
                sprintf("%s - baked cookie with expiration time '%s', times are within 1 second", $test->[0], $test->[1]));
