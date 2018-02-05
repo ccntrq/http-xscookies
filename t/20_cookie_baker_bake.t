@@ -135,13 +135,20 @@ sub cookie_to_string {
     my %fields;
     for my $part (@parts) {
         my @p = split('=', $part);
-        next unless @p == 2;
-        $fields{$p[0]} = $p[1];
+        if (@p == 2 ){
+            $fields{$p[0]} = $p[1];
+        }
+        else {
+            $fields{$p[0]} = undef;
+        }
     }
 
     $str = $first;
     for my $key (sort keys %fields) {
-        $str .= sprintf("; %s=%s", $key, $fields{$key});
+        $str .=
+          defined $fields{$key}
+          ? sprintf( "; %s=%s", $key, $fields{$key} )
+          : "; $key";
     }
     return $str;
 }
