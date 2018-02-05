@@ -124,6 +124,14 @@ static void build_cookie(pTHX_ SV* pname, SV* pvalue, Buffer* cookie)
 
         /* TODO: should we skip if cvalue is invalid / empty? */
 
+        /*
+         *  we should skip if the value is '0' or '' to match perl semantics
+         *  for boolean values
+         */
+        if ( strcmp(cvalue, "0") == 0 || *cvalue == 0 ) {
+            continue;
+        }
+
         if      (strcasecmp(key, COOKIE_NAME_DOMAIN) == 0) {
             cookie_put_string (cookie, COOKIE_NAME_DOMAIN   , sizeof(COOKIE_NAME_DOMAIN)    - 1, cvalue, vlen, 0);
         } else if (strcasecmp(key, COOKIE_NAME_PATH      ) == 0) {
